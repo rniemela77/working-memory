@@ -1,5 +1,5 @@
 <template>
-  <div class="color-dash">
+  <div class="color-dash" @click="screenTap">
     <div class="game-container">
       <div class="character" :style="{ backgroundColor: characterColor }"></div>
       <div
@@ -46,7 +46,7 @@ const updateGame = () => {
     // Update obstacle positions
     for (let i = 0; i < obstacles.value.length; i++) {
       console.log(obstacles.value[i].position);
-      obstacles.value[i].position -= 5;
+      obstacles.value[i].position -= 10;
 
       if (obstacles.value[i].position <= 0) {
         obstacles.value.splice(i, 1);
@@ -59,7 +59,6 @@ const updateGame = () => {
         (obstacle) => obstacle.position < 20 && obstacle.color !== characterColor.value
     );
     if (collidedObstacle && obstacles.value.find((obstacle) => obstacle.position < 20)) {
-      console.log('end game');
       endGame();
     }
   }
@@ -89,15 +88,22 @@ const startGame = () => {
 
 // Function to change the character's color
 const changeCharacterColor = (event) => {
-  if (event.code === "Space") {
+  console.log(event);
+  // if (event.code === "Space" ||) {
+  if (!gameOver.value) {
     characterColor.value = getRandomColor();
   }
 };
 
+const screenTap = (event) => {
+  changeCharacterColor(event);
+}
+
+
 
 // Function to get a random color
 const getRandomColor = () => {
-  const arr = ['red', 'orange'];
+  const arr = ['red', 'orange', 'pink', 'yellow'];
 
   const randomIndex = Math.floor(Math.random() * arr.length);
 
@@ -107,7 +113,7 @@ const getRandomColor = () => {
 // Lifecycle hook
 onMounted(() => {
   startGame();
-  gameInterval = setInterval(updateGame, 500);
+  gameInterval = setInterval(updateGame, 400);
 });
 </script>
 
@@ -145,6 +151,7 @@ onMounted(() => {
   bottom: 0;
   width: 50px;
   height: 50px;
+  transition: all 0.5s linear;
 }
 
 .score {
